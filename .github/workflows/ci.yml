@@ -24,6 +24,6 @@ jobs:
           mcp-trustcheck-mock --port 8765 &
           sleep 1
           mcp-trustcheck http://127.0.0.1:8765/mcp --call 'echo={"text":"hi"}' --call 'add={"a":2,"b":3}' --json out.json --markdown out.md
-      - name: Secret scan
+      - name: Secret scan (tracked files only)
         run: |
-          ! grep -rEn "AKIA[0-9A-Z]{16}|sk-[A-Za-z0-9]{20,}|gh[pousr]_[A-Za-z0-9]{30,}|BEGIN [A-Z ]*PRIVATE KEY" --exclude-dir=.git --exclude=ci.yml --exclude=test_trustcheck.py --exclude=redact.py .
+          ! git grep -InE "AKIA[0-9A-Z]{16}|sk-[A-Za-z0-9]{20,}|gh[pousr]_[A-Za-z0-9]{30,}|BEGIN [A-Z ]*PRIVATE KEY" -- . ':!.github/workflows/ci.yml' ':!tests/test_trustcheck.py' ':!src/mcp_trustcheck/redact.py'
