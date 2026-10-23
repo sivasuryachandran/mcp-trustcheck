@@ -1,0 +1,29 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ["3.10", "3.12", "3.14"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: pip install -e ".[dev]"
+      - run: python -m compileall -q src tests
+      - run: pytest -q
+      - name: End-to-end against the bundled mock server
+        run: |
+          mcp-trustcheck-mock --port 8765 &
+          sleep 1
+          mcp-trustcheck http://127.0.0.1:8765/mcp --call 'echo={"text":"hi"}' --call 'add={"a":2,"b":3}' --json out.json --markdown out.md
+      - name: Secret scan
+        run: |
+          ! grep -rEn "AKIA[0-9A-Z]{16}|sk-[A-Za-z0-9]{20,}|gh[pousr]_[A-Za-z0-9]{30,}|BEGIN [A-Z ]*PRIVATE KEY" --exclude-dir=.git --exclude=ci.yml --exclude=test_trustcheck.py --exclude=redact.py .

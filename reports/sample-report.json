@@ -1,0 +1,529 @@
+{
+  "tool": "mcp-trustcheck",
+  "version": "0.1.0",
+  "generated_at": "2026-10-23T04:53:52+00:00",
+  "target": "http://127.0.0.1:8765/mcp",
+  "summary": {
+    "pass": 14,
+    "fail": 0,
+    "warn": 0,
+    "skip": 1,
+    "ok": true
+  },
+  "results": [
+    {
+      "name": "initialize",
+      "status": "pass",
+      "detail": "server mock",
+      "data": {}
+    },
+    {
+      "name": "protocol_version",
+      "status": "pass",
+      "detail": "server negotiated '2025-11-25'; minimum 2025-11-25",
+      "data": {}
+    },
+    {
+      "name": "tools_list",
+      "status": "pass",
+      "detail": "2 tools",
+      "data": {
+        "names": [
+          "add",
+          "echo"
+        ]
+      }
+    },
+    {
+      "name": "tool_schemas",
+      "status": "pass",
+      "detail": "every tool has a name and an object inputSchema",
+      "data": {}
+    },
+    {
+      "name": "tools_call:echo",
+      "status": "pass",
+      "detail": "valid CallToolResult",
+      "data": {}
+    },
+    {
+      "name": "structured_output:echo",
+      "status": "skip",
+      "detail": "tool declares no outputSchema",
+      "data": {}
+    },
+    {
+      "name": "tools_call:add",
+      "status": "pass",
+      "detail": "valid CallToolResult",
+      "data": {}
+    },
+    {
+      "name": "structured_output:add",
+      "status": "pass",
+      "detail": "structuredContent matches outputSchema",
+      "data": {}
+    },
+    {
+      "name": "error_unknown_method",
+      "status": "pass",
+      "detail": "expected code -32601, got -32601",
+      "data": {}
+    },
+    {
+      "name": "error_malformed_json",
+      "status": "pass",
+      "detail": "HTTP 400, code -32700; expected -32700 or an HTTP 4xx",
+      "data": {}
+    },
+    {
+      "name": "error_unknown_tool",
+      "status": "pass",
+      "detail": "unknown tool reported as an error",
+      "data": {}
+    },
+    {
+      "name": "request_ids",
+      "status": "pass",
+      "detail": "integer and string ids echoed unchanged",
+      "data": {}
+    },
+    {
+      "name": "server_does_not_echo_secrets",
+      "status": "pass",
+      "detail": "no response contained the canary or the supplied token",
+      "data": {}
+    },
+    {
+      "name": "trace_is_redacted",
+      "status": "pass",
+      "detail": "the captured trace contains no secret patterns",
+      "data": {}
+    },
+    {
+      "name": "latency",
+      "status": "pass",
+      "detail": "p95 9.3 ms (limit 2000 ms)",
+      "data": {
+        "requests": 10,
+        "median_ms": 0.3,
+        "p95_ms": 9.3,
+        "max_ms": 9.3
+      }
+    }
+  ],
+  "trace": [
+    {
+      "request_headers": {
+        "Content-Type": "application/json",
+        "Accept": "application/json, text/event-stream",
+        "X-Trustcheck-Canary": "[REDACTED]"
+      },
+      "request": {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "initialize",
+        "params": {
+          "protocolVersion": "2025-11-25",
+          "capabilities": {},
+          "clientInfo": {
+            "name": "mcp-trustcheck",
+            "version": "0.1.0"
+          },
+          "_meta": {
+            "trustcheck-canary": "[REDACTED]"
+          }
+        }
+      },
+      "status": 200,
+      "elapsed_ms": 9.3,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "result": {
+          "protocolVersion": "2025-11-25",
+          "capabilities": {
+            "tools": {}
+          },
+          "serverInfo": {
+            "name": "mock",
+            "version": "1"
+          }
+        }
+      }
+    },
+    {
+      "request_headers": {
+        "Content-Type": "application/json",
+        "Accept": "application/json, text/event-stream",
+        "X-Trustcheck-Canary": "[REDACTED]",
+        "Mcp-Session-Id": "[REDACTED]",
+        "MCP-Protocol-Version": "2025-11-25"
+      },
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "notifications/initialized"
+      },
+      "status": 202,
+      "elapsed_ms": 0.4,
+      "response": ""
+    },
+    {
+      "request_headers": {
+        "Content-Type": "application/json",
+        "Accept": "application/json, text/event-stream",
+        "X-Trustcheck-Canary": "[REDACTED]",
+        "Mcp-Session-Id": "[REDACTED]",
+        "MCP-Protocol-Version": "2025-11-25"
+      },
+      "request": {
+        "jsonrpc": "2.0",
+        "id": 2,
+        "method": "tools/list",
+        "params": {}
+      },
+      "status": 200,
+      "elapsed_ms": 0.3,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": 2,
+        "result": {
+          "tools": [
+            {
+              "name": "echo",
+              "description": "Return the text.",
+              "inputSchema": {
+                "type": "object",
+                "properties": {
+                  "text": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "text"
+                ]
+              }
+            },
+            {
+              "name": "add",
+              "description": "Add two numbers.",
+              "inputSchema": {
+                "type": "object",
+                "properties": {
+                  "a": {
+                    "type": "number"
+                  },
+                  "b": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "a",
+                  "b"
+                ]
+              },
+              "outputSchema": {
+                "type": "object",
+                "properties": {
+                  "sum": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "sum"
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "request_headers": {
+        "Content-Type": "application/json",
+        "Accept": "application/json, text/event-stream",
+        "X-Trustcheck-Canary": "[REDACTED]",
+        "Mcp-Session-Id": "[REDACTED]",
+        "MCP-Protocol-Version": "2025-11-25"
+      },
+      "request": {
+        "jsonrpc": "2.0",
+        "id": 3,
+        "method": "tools/call",
+        "params": {
+          "name": "echo",
+          "arguments": {
+            "text": "hello"
+          }
+        }
+      },
+      "status": 200,
+      "elapsed_ms": 0.3,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": 3,
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "hello"
+            }
+          ],
+          "isError": false
+        }
+      }
+    },
+    {
+      "request_headers": {
+        "Content-Type": "application/json",
+        "Accept": "application/json, text/event-stream",
+        "X-Trustcheck-Canary": "[REDACTED]",
+        "Mcp-Session-Id": "[REDACTED]",
+        "MCP-Protocol-Version": "2025-11-25"
+      },
+      "request": {
+        "jsonrpc": "2.0",
+        "id": 4,
+        "method": "tools/call",
+        "params": {
+          "name": "add",
+          "arguments": {
+            "a": 2,
+            "b": 3
+          }
+        }
+      },
+      "status": 200,
+      "elapsed_ms": 0.3,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": 4,
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "5"
+            }
+          ],
+          "structuredContent": {
+            "sum": 5
+          },
+          "isError": false
+        }
+      }
+    },
+    {
+      "request_headers": {
+        "Content-Type": "application/json",
+        "Accept": "application/json, text/event-stream",
+        "X-Trustcheck-Canary": "[REDACTED]",
+        "Mcp-Session-Id": "[REDACTED]",
+        "MCP-Protocol-Version": "2025-11-25"
+      },
+      "request": {
+        "jsonrpc": "2.0",
+        "id": 5,
+        "method": "trustcheck/no-such-method",
+        "params": {}
+      },
+      "status": 200,
+      "elapsed_ms": 0.3,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": 5,
+        "error": {
+          "code": -32601,
+          "message": "Method not found"
+        }
+      }
+    },
+    {
+      "request_headers": {
+        "Content-Type": "application/json",
+        "Accept": "application/json, text/event-stream",
+        "X-Trustcheck-Canary": "[REDACTED]",
+        "Mcp-Session-Id": "[REDACTED]",
+        "MCP-Protocol-Version": "2025-11-25"
+      },
+      "request": "{not json",
+      "status": 400,
+      "elapsed_ms": 0.3,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": null,
+        "error": {
+          "code": -32700,
+          "message": "Parse error"
+        }
+      }
+    },
+    {
+      "request_headers": {
+        "Content-Type": "application/json",
+        "Accept": "application/json, text/event-stream",
+        "X-Trustcheck-Canary": "[REDACTED]",
+        "Mcp-Session-Id": "[REDACTED]",
+        "MCP-Protocol-Version": "2025-11-25"
+      },
+      "request": {
+        "jsonrpc": "2.0",
+        "id": 6,
+        "method": "tools/call",
+        "params": {
+          "name": "trustcheck-no-such-tool",
+          "arguments": {}
+        }
+      },
+      "status": 200,
+      "elapsed_ms": 0.3,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": 6,
+        "error": {
+          "code": -32602,
+          "message": "Unknown tool"
+        }
+      }
+    },
+    {
+      "request_headers": {
+        "Content-Type": "application/json",
+        "Accept": "application/json, text/event-stream",
+        "X-Trustcheck-Canary": "[REDACTED]",
+        "Mcp-Session-Id": "[REDACTED]",
+        "MCP-Protocol-Version": "2025-11-25"
+      },
+      "request": {
+        "jsonrpc": "2.0",
+        "id": 9001,
+        "method": "tools/list",
+        "params": {}
+      },
+      "status": 200,
+      "elapsed_ms": 0.3,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": 9001,
+        "result": {
+          "tools": [
+            {
+              "name": "echo",
+              "description": "Return the text.",
+              "inputSchema": {
+                "type": "object",
+                "properties": {
+                  "text": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "text"
+                ]
+              }
+            },
+            {
+              "name": "add",
+              "description": "Add two numbers.",
+              "inputSchema": {
+                "type": "object",
+                "properties": {
+                  "a": {
+                    "type": "number"
+                  },
+                  "b": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "a",
+                  "b"
+                ]
+              },
+              "outputSchema": {
+                "type": "object",
+                "properties": {
+                  "sum": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "sum"
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "request_headers": {
+        "Content-Type": "application/json",
+        "Accept": "application/json, text/event-stream",
+        "X-Trustcheck-Canary": "[REDACTED]",
+        "Mcp-Session-Id": "[REDACTED]",
+        "MCP-Protocol-Version": "2025-11-25"
+      },
+      "request": {
+        "jsonrpc": "2.0",
+        "id": "trustcheck-string-id",
+        "method": "tools/list",
+        "params": {}
+      },
+      "status": 200,
+      "elapsed_ms": 0.2,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": "trustcheck-string-id",
+        "result": {
+          "tools": [
+            {
+              "name": "echo",
+              "description": "Return the text.",
+              "inputSchema": {
+                "type": "object",
+                "properties": {
+                  "text": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "text"
+                ]
+              }
+            },
+            {
+              "name": "add",
+              "description": "Add two numbers.",
+              "inputSchema": {
+                "type": "object",
+                "properties": {
+                  "a": {
+                    "type": "number"
+                  },
+                  "b": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "a",
+                  "b"
+                ]
+              },
+              "outputSchema": {
+                "type": "object",
+                "properties": {
+                  "sum": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "sum"
+                ]
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
